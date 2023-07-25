@@ -290,13 +290,20 @@ if [ "$TFILEMDJSONNAME" ]; then
   echo "services.MetadataSBN.fileFormat: \"root\"" >> $INPUTFCLNAME
   echo "services.MetadataSBN.Experiment: \"$MDGROUPNAME\"" >> $INPUTFCLNAME
   # If we want to make caf files in production, lets set the output name here also
-  if [ "$CAFNAME" ]
+  if [ "$CAFNAME" && "$FLATCAFNAME" ]
   then
     echo "physics.producers.cafmaker.CAFFilename: \"$CAFNAME\"" >> $INPUTFCLNAME
-    # Line below added while SBND use mycafmaker, temporary
-    echo "physics.producers.mycafmaker.CAFFilename: \"$CAFNAME\"" >> $INPUTFCLNAME
+    echo "physics.producers.cafmaker.FlatCAFFilename: \"$FLATCAFNAME\"" >> $INPUTFCLNAME
+    echo "services.MetadataSBN.dataTier: \"cafana\"" >> $INPUTFCLNAME
+  else if [ "$CAFNAME" ]
+  then
+    echo "physics.producers.cafmaker.CAFFilename: \"$CAFNAME\"" >> $INPUTFCLNAME
+    echo "services.MetadataSBN.dataTier: \"cafana\"" >> $INPUTFCLNAME
+  else if [ "$FLATCAFNAME" ]
+  then
+    echo "physics.producers.cafmaker.FlatCAFFilename: \"$FLATCAFNAME\"" >> $INPUTFCLNAME
     echo "services.MetadataSBN.dataTier: \"cafana\"" >> $INPUTFCLNAME
   else
-    echo "services.MetadataSBN.dataTier: \"root-tuple\"" >> $INPUTFCLNAME    
+    echo "services.MetadataSBN.dataTier: \"root-tuple\"" >> $INPUTFCLNAME
   fi
 fi
