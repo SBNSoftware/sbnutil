@@ -143,14 +143,25 @@ while [[ $(samweb -e ${SAM_EXPERIMENT} get-metadata --json ${RAW_FILE} | jq .par
 FDATE=$(samweb -e ${SAM_EXPERIMENT} get-metadata --json ${RAW_FILE} | jq .create_date | tr -d "\"" | awk -F "T" '{print $1}' | tr -d "-")
 echo "Getting physics date from raw event file ${RAW_FILE} made on ${FDATE}"
 
-export MT_DTAG=${MT_PRODUCTIONNAME}_${MT_SBND_STREAM_NAME}_${SBNDCODE_VERSION}_${MT_PROJECTSTAGE}
-export MT_DTAG_CONCAT=${MT_PRODUCTIONNAME}_${SBNDCODE_VERSION}_${MT_PROJECTSTAGE}
-export OTHER_MT_DTAG=${MT_PRODUCTIONNAME}_${MT_SBND_STREAM_NAME}_${SBNDCODE_VERSION}_hist${MT_PROJECTSTAGE}
-export OTHER_MT_DTAG_CONCAT=${MT_PRODUCTIONNAME}_${SBNDCODE_VERSION}_hist${MT_PROJECTSTAGE}
-export LARCV_MT_DTAG=${MT_PRODUCTIONNAME}_${MT_SBND_STREAM_NAME}_${SBNDCODE_VERSION}_larcv${MT_PROJECTSTAGE}
-export LARCV_MT_DTAG_CONCAT=${MT_PRODUCTIONNAME}_${SBNDCODE_VERSION}_larcv${MT_PROJECTSTAGE}
-export FLAT_MT_DTAG=${MT_PRODUCTIONNAME}_${MT_SBND_STREAM_NAME}_${SBNDCODE_VERSION}_flat${MT_PROJECTSTAGE}
-export FLAT_MT_DTAG_CONCAT=${MT_PRODUCTIONNAME}_${SBNDCODE_VERSION}_flat${MT_PROJECTSTAGE}
+export MT_DTAG=${MT_PRODUCTIONTYPE}_${MT_PRODUCTIONLABEL}_${MT_PRODUCTIONNAME}_${MT_SBND_STREAM_NAME}_${SBNDCODE_VERSION}_${MT_PROJECTSTAGE}_sbnd
+export MT_DTAG_CONCAT=${MT_PRODUCTIONTYPE}_${MT_PRODUCTIONLABEL}_${MT_PRODUCTIONNAME}_${SBNDCODE_VERSION}_${MT_PROJECTSTAGE}_sbnd
+export OTHER_MT_DTAG=${MT_PRODUCTIONTYPE}_${MT_PRODUCTIONLABEL}_${MT_PRODUCTIONNAME}_${MT_SBND_STREAM_NAME}_${SBNDCODE_VERSION}_hist${MT_PROJECTSTAGE}_sbnd
+export OTHER_MT_DTAG_CONCAT=${MT_PRODUCTIONTYPE}_${MT_PRODUCTIONLABEL}_${MT_PRODUCTIONNAME}_${SBNDCODE_VERSION}_hist${MT_PROJECTSTAGE}_sbnd
+export LARCV_MT_DTAG=${MT_PRODUCTIONTYPE}_${MT_PRODUCTIONLABEL}_${MT_PRODUCTIONNAME}_${MT_SBND_STREAM_NAME}_${SBNDCODE_VERSION}_larcv${MT_PROJECTSTAGE}_sbnd
+export LARCV_MT_DTAG_CONCAT=${MT_PRODUCTIONTYPE}_${MT_PRODUCTIONLABEL}_${MT_PRODUCTIONNAME}_${SBNDCODE_VERSION}_larcv${MT_PROJECTSTAGE}_sbnd
+export FLAT_MT_DTAG=${MT_PRODUCTIONTYPE}_${MT_PRODUCTIONLABEL}_${MT_PRODUCTIONNAME}_${MT_SBND_STREAM_NAME}_${SBNDCODE_VERSION}_flat${MT_PROJECTSTAGE}_sbnd
+export FLAT_MT_DTAG_CONCAT=${MT_PRODUCTIONTYPE}_${MT_PRODUCTIONLABEL}_${MT_PRODUCTIONNAME}_${SBNDCODE_VERSION}_flat${MT_PROJECTSTAGE}_sbnd
+
+#if [[ $(grep ${MT_PRODUCTIONTYPE} -e 'test') != "" ]] ; then
+#    MT_DTAG=test_${MT_DTAG}
+#    MT_DTAG_CONCAT=test_${MT_DTAG_CONCAT}
+#    OTHER_MT_DTAG=test_${OTHER_MT_DTAG}
+#    OTHER_MT_DTAG_CONCAT=test_${OTHER_MT_DTAG_CONCAT}
+#    LARCV_MT_DTAG=test_${LARCV_MT_DTAG}
+#    LARCV_MT_DTAG_CONCAT=test_${LARCV_MT_DTAG_CONCAT}
+#    FLAT_MT_DTAG=test_${FLAT_MT_DTAG}
+#    FLAT_MT_DTAG_CONCAT=test_${FLAT_MT_DTAG_CONCAT}
+#fi
 
 # Hmm - should we add a poms_task field?
 echo -e " \"Dataset.Tag\": \"${MT_DTAG}\"," >> ${MD_FILE}
@@ -191,7 +202,7 @@ echo -e " }" >> ${MD_FILE}
 echo -e "{" >> ${LARCV_MD_FILE}
 echo -e " \"file_name\": \"$(basename ${newLarcvFile})\"," >> ${LARCV_MD_FILE}
 echo -e " \"file_size\": $(stat -c %s ${newLarcvFile} | awk -F " " '{print $1}')," >> ${LARCV_MD_FILE}
-echo -e " \"data_tier\": \"${dataTier}\"," >> ${LARCV_MD_FILE}
+echo -e " \"data_tier\": \"larcv\"," >> ${LARCV_MD_FILE}
 echo -e " \"data_stream\": \"${MT_SBND_STREAM_NAME}\"," >> ${LARCV_MD_FILE}
 
 echo -e " \"file_format\": \"artroot\"," >> ${LARCV_MD_FILE}
@@ -239,7 +250,7 @@ if [ ${otherFile} != "" ] && [ $2=="true" ] ; then
 
     echo -e " \"file_name\": \"$(basename ${newOtherFile})\"," >> ${OTHER_MD_FILE}
     echo -e " \"file_size\": $(stat -c %s ${newOtherFile} | awk -F " " '{print $1}')," >> ${OTHER_MD_FILE}
-    echo -e " \"data_tier\": \"${dataTier}\"," >> ${OTHER_MD_FILE}
+    echo -e " \"data_tier\": \"root-tuple\"," >> ${OTHER_MD_FILE}
 
     # I just have to lookup some stuff.. ugh
     echo -e " \"data_stream\": \"${MT_SBND_STREAM_NAME}\"," >> ${OTHER_MD_FILE}

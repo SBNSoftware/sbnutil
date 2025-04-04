@@ -1,5 +1,8 @@
 #!/bin/sh
 sh sbnpoms_wrapperfcl_maker.sh --fclname $1 --wrappername ${CONDOR_DIR_INPUT}/$2
+if [[ $# -gt 2 ]] ; then
+    sh sbnpoms_wrapperfcl_maker.sh --fclname $3 --wrappername ${CONDOR_DIR_INPUT}/$4
+fi
 
 export MT_ENV_FCLNAME=$1
 export my_cpurl=$(ifdh findProject ${SAM_PROJECT} ${SAM_STATION} ${EXPERIMENT}) && echo " my_cpurl is ${my_cpurl}"
