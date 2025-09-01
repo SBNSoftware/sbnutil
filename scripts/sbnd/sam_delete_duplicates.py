@@ -75,37 +75,38 @@ def _buildAncestors(_queue: multiprocessing.Queue(), _result: multiprocessing.Qu
     _result.put((res_dict))
     return
 
-def retire_file(filename: str, dry_run=False, delete=True):
+def retire_file(filename: pathlib.Path, dry_run=False, delete=True):
     """Remove a file's location, retire it from SAM, and delete the file"""
 
     loc = None
     fpath = None
     try:
-        loc = SAMWeb_Client.locateFile(filename)
+        loc = SAMWeb_Client.locateFile(filename.name)
         loc = loc[0]["location"]
         loc=loc.removeprefix("enstore:")
         loc=loc.removeprefix("dcache:")
-        fpath = f"{loc}/{filename}"
+        fpath = f"{loc}/{filename.name}"
     except Exception as e:
-        logger.warning(f"Cannot remove file location for {filename} ({e})")
+        logger.warning(f"Cannot remove file location for {filename.name} ({e})")
 
     if dry_run:
         if loc is not None:
-            logger.debug(f"SAMWeb_Client.removeFileLocation({filename}, {loc})")
-        logger.debug(f"SAMWeb_Client.retireFile({filename})")
+            logger.debug(f"SAMWeb_Client.removeFileLocation({filename.name}, {loc})")
+        logger.debug(f"SAMWeb_Client.retireFile({filename.name})")
         if (loc is not None and delete):
-            logger.debug(f"os.system('rm -f {fpath}')")
+            logger.debug(f"{filename.name}.unlink()")
 
     else:
         if loc is not None:
             try:
                 SAMWeb_Client.removeFileLocation(filename, loc)
             except samweb_client.exceptions.FileLocationNotFound as e:
-                logger.error(f"Could not remove file {filename} from location {loc} as it was not located there")
-        logger.warning(f"Retiring file {filename}...")
+                logger.error(f"Could not remove file {filename.name} from location {loc} as it was not located there")
+        logger.warning(f"Retiring file {filename.name}...")
         SAMWeb_Client.retireFile(filename)
         if (loc is not None and delete):
-            os.system('rm -f {fpath}')
+            #os.system('rm -f {fpath}')
+            filename.unlink()
 
     return
 
@@ -131,7 +132,7 @@ def _removeDuplicates(_queue: multiprocessing.Queue(), _result: multiprocessing.
         now = datetime.now()
 
         try:
-            retire_file(item, dry_run=args.dry_run, delete=args.delete)
+            retire_file(pathlib.Path(item), dry_run=args.dry_run, delete=args.delete)
             nretired += 1 
         except Exception as e:
             logger.warning(f'{pid=} Skipping {item}, exception ({e}).')
