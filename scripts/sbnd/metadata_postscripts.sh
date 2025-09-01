@@ -61,6 +61,8 @@ if [[ ${candFile} == "" ]] ; then return ; fi
 
 samweb -e ${SAM_EXPERIMENT} get-metadata --json $(basename ${PARENT_FILE_SAM}) > old_par_md.json
 
+# TODO: check to see if this had the event_number_list and inherit it if yes
+
 # now I will touch new json files.
 MD_FILE=md_$1.json
 OTHER_MD_FILE=md_other$1.json
@@ -183,6 +185,9 @@ echo -e " \"sbn_dm.detector\": \"${MT_DETECTOR}\"," >> ${MD_FILE}
 echo -e " \"sbn_dm.event_count\": ${MT_EVENTCOUNT}," >> ${MD_FILE}
 echo -e " \"sbnd.random\": \"${MT_RANDOM}\"," >> ${MD_FILE}
 echo -e " \"sbnd.random_run\": \"${MT_RANDOMRUN}\"," >> ${MD_FILE}
+if [[ ! -z ${MT_EVENTSTRING} ]] ; then
+    echo -e " \"sbnd.event_number_list\": \"${MT_EVENTSTRING}\"," >> ${MD_FILE}
+fi
 echo -e " \"sbnd_project.name\": \"${MT_PROJECTNAME}\"," >> ${MD_FILE}
 echo -e " \"sbnd_project.software\": \"${MT_PROJECTSOFTWARE}\"," >> ${MD_FILE}
 echo -e " \"sbnd_project.stage\": \"${MT_PROJECTSTAGE}\"," >> ${MD_FILE}
