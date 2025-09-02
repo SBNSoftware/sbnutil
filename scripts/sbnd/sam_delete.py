@@ -217,7 +217,7 @@ if __name__ == '__main__':
     parser.add_argument('filename')
     parser.add_argument('-R', '--recursive', action='store_true', help='If filename is a directory, glob for files within.')
     parser.add_argument('-D', '--dry_run', action='store_true', help='Do not actually retire files')
-    parser.add_argument('-d', '--delete', action='store_false', help='Delete file from disk after it has been retired from SAM')
+    parser.add_argument('-d', '--delete', action='store_true', help='Delete file from disk after it has been retired from SAM')
     args = parser.parse_args()
 
     main(args)
