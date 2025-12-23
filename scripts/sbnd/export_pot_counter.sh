@@ -16,6 +16,9 @@ proper_name="I_AM_UNSET.root"
 if [[ $1 == "decode" ]] ; then
     choppy_file=$(find ./ -iname '*choppy*.root' | grep -v 'hist')
     proper_name=decoded-raw_filtered_${choppy_file#*choppy_}
+elif [[ $1 == "reco2" ]] ; then
+    hist_file=$(find ./ -iname 'hist_reco2*.root')
+    proper_name=${hist_file#hist_*}
 else
     echo "Error - I don't know how to do other stages yet..."
 fi

@@ -1,14 +1,23 @@
 #!/bin/sh
 sh sbnpoms_wrapperfcl_maker.sh --fclname $1 --wrappername ${CONDOR_DIR_INPUT}/$2
 if [[ $# -gt 2 ]] ; then
+    echo "I will try to make the POT wrapper fcl file now"
+    echo "Running command: sh sbnpoms_wrapperfcl_maker.sh --fclname $3 --wrappername ${CONDOR_DIR_INPUT}/$4"
     sh sbnpoms_wrapperfcl_maker.sh --fclname $3 --wrappername ${CONDOR_DIR_INPUT}/$4
+    echo "Done. Here it is:"
+    cat ${CONDOR_DIR_INPUT}/$4
 fi
 
 export MT_ENV_FCLNAME=$1
-export my_cpurl=$(ifdh findProject ${SAM_PROJECT} ${SAM_STATION} ${EXPERIMENT}) && echo " my_cpurl is ${my_cpurl}"
+echo "export my_cpurl=$(ifdh findProject ${SAM_PROJECT} ${SAM_STATION} ${EXPERIMENT}) && echo \"my_cpurl is ${my_cpurl}\""
+export my_cpurl=$(ifdh findProject ${SAM_PROJECT} ${SAM_STATION} ${EXPERIMENT}) && echo "my_cpurl is ${my_cpurl}"
+echo "export my_furi=$(ifdh getNextFile ${my_cpurl} ${SAM_CONSUMER_ID}) && echo \"my_furi is ${my_furi}\""
 export my_furi=$(ifdh getNextFile ${my_cpurl} ${SAM_CONSUMER_ID}) && echo "my_furi is ${my_furi}"
+echo "export PARENT_FILE_SAM=$(basename ${my_furi}) && echo \"Here is the PARENT_FILE_SAM...\" && echo \" ${PARENT_FILE_SAM}\""
 export PARENT_FILE_SAM=$(basename ${my_furi}) && echo "Here is the PARENT_FILE_SAM..." && echo " ${PARENT_FILE_SAM}"
+echo "sh ${CONDOR_DIR_INPUT}/sbndpoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json"
 sh ${CONDOR_DIR_INPUT}/sbndpoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json
+echo "Start exporting now..."
 export MT_CONFIGURATION=$(cat extra_metadata.json | echo $(awk -F "\"configuration.name\":" '{print $2}') | echo $(awk -F "\"," '{print $1}') | echo $(awk -F "\"" '{print $2}'))
 export MT_BEAMTYPE=$(cat extra_metadata.json | echo $(awk -F "\"sbn_dm.beam_type\":" '{print $2}') | echo $(awk -F "\"," '{print $1}') | echo $(awk -F "\"" '{print $2}'))
 export MT_DETECTOR=$(cat extra_metadata.json | echo $(awk -F "\"sbn_dm.detector\":" '{print $2}') | echo $(awk -F "\"," '{print $1}') | echo $(awk -F "\"" '{print $2}'))

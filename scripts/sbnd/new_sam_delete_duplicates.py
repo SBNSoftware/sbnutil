@@ -54,10 +54,6 @@ def _buildAncestors(_queue: multiprocessing.Queue(), _result: multiprocessing.Qu
 
         try:
             check_parent = SAMWeb_Client.getMetadata(item)['parents'][0]['file_name']
-            # remove the hash
-            strmIndex = check_parent.find('strm', 0)
-            index = check_parent.find('-', strmIndex)
-            check_parent = check_parent[:index]
             res_dict[item] = check_parent
             logger.debug(f"{pid=} Added parent {check_parent}")
         except Exception as e:
@@ -232,13 +228,6 @@ def main(args: dict) -> None:
     # Get duplicates
     for files in inverse_map.values():
         if len(files) > 1:
-            for f in files:
-                try:
-                    SAMWeb_Client.getMetadata(f)
-                except: # Definitely retire children of retired files
-                    logger.warning(f"Adding {f} to be retired, its parent is not found in SAM")
-                    files_to_retire.extend(f)
-                    files = files[1:]
             files_to_retire.extend(files[1:]) # all but 0th key
 
     logger.warning(f"There are {len(files_to_retire)} duplicates here")
