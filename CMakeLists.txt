@@ -1,32 +1,23 @@
-# CMakeLists.txt file for sbnutil
+# ======================================================================
+#  sbnutil main build file
+#
+#  cd .../path/to/build/directory
+#  source .../path/to/lardataobj/ups/setup_for_development <-d|-p>
+#  buildtool [-I /install/path] -bt[i] -jN
+# ======================================================================
 
-#  This simply copies files into an install directory - there is no build
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
-CMAKE_MINIMUM_REQUIRED (VERSION 3.11)
+find_package(cetmodules REQUIRED)
+project(sbnutil VERSION 01.00.00)
 
-project(sbnutil VERSION 00.00.05)
-
-# cetbuildtools contains our cmake modules
-find_package(cetbuildtools REQUIRED)
-
-# Add any modules from this source necessary for building
-##list(APPEND CMAKE_MODULE_PATH
-##  ${CMAKE_CURRENT_SOURCE_DIR}/Modules)
-
+# Sbnutil has not architecture dependence
 include(CetCMakeEnv)
-
-# sbnutil has no architecture dependence
 cet_cmake_env( noarch )
-
-# Make sure cetbuildtools is set up (version is minimum)
-find_ups_product(cetbuildtools)
 
 # Scripts
 add_subdirectory(scripts)
 
-# ups - table and config files
-# must be AFTER all other subdirectories
-add_subdirectory(ups)
-
 # packaging utility
-include(UseCPack)
+
+cet_cmake_config()
