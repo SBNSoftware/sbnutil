@@ -2,7 +2,7 @@
 
 FCL={gen-fcl-name}.fcl
 FCLNAME={gen-fcl-name}
-NFILES={number-of-files-with-100-events-per-file}
+NFILES={number-of-files-with-50-events-per-file}
 MDPRODNAME={production-name}
 OUTDIR=/pnfs/sbnd/persistent/sbndpro/initialfcl
 WORKDIR=/sbnd/app/users/sbndpro/fcl_gen/$MDPRODNAME/$FCLNAME/
