@@ -11,3 +11,7 @@
 # record the string as-is rather than trying to move any bytes around.
 echo "$1" > real_data_input.txt
 cat real_data_input.txt
+
+export my_furi="$1" && echo "my_furi is ${my_furi}"
+export PARENT_FILE_SAM=$(basename ${my_furi}) && echo "Here is the PARENT_FILE_SAM..." && echo " ${PARENT_FILE_SAM}"
+
