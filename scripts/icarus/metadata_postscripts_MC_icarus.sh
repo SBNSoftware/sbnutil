@@ -7,6 +7,7 @@
 
 >&2 echo -e "\n\nSTARTING $0...\n\n"
 
+export PARENT_FILE_SAM=$(cat real_data_input.txt)
 parentFile=$(basename ${PARENT_FILE_SAM}) # This is either a raw file or a stage0 file
 stage0File=''  # Artroot stage0 files
 larcvFile=''   # LarCV files
@@ -266,7 +267,7 @@ for mdFile in "${MDFILES[@]}" ; do
     echo -e " \"first_event\": ${first_event}," >> ${mdFile}
     echo -e " \"last_event\": ${last_event}," >> ${mdFile}
     echo -e " \"parents\": [" >> ${mdFile}
-    echo -e "\t{ \"file_name\": \"${PARENT_FILE_SAM}\" }" >> ${mdFile}
+    echo -e "\t{ \"file_name\": \"${parentFile}\" }" >> ${mdFile}
     echo -e "  ]" >> ${mdFile}
     echo -e " }" >> ${mdFile}
 done
