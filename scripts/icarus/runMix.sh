@@ -12,7 +12,7 @@
 
 # Edit: I assume the output g4 file is already `genfile.root.local'
 STASHFILE=real_data_input.txt
-NEVT=2
+NEVT=100
 STREAMNAME=offbeambnbminbias
 FCLFILE=overwrite_me
 OUTPUTFILE=overwrite_me
@@ -38,4 +38,7 @@ done
 
 INPUTFILE=$(cat ${STASHFILE})
 
-lar -c ${FCLFILE} -T hist_${OUTPUTFILE} -n ${NEVT} --sam-data-tier raw --sam-stream-name ${STREAMNAME} -o ${OUTPUTFILE} -s ${INPUTFILE}
+cmd="lar -c ${FCLFILE} -T hist_${OUTPUTFILE} -n ${NEVT} --sam-data-tier raw --sam-stream-name ${STREAMNAME} -o ${OUTPUTFILE} -s ${INPUTFILE}"
+echo "Mixing command: ${cmd}"
+#lar -c ${FCLFILE} -T hist_${OUTPUTFILE} -n ${NEVT} --sam-data-tier raw --sam-stream-name ${STREAMNAME} -o ${OUTPUTFILE} -s ${INPUTFILE}
+eval $cmd

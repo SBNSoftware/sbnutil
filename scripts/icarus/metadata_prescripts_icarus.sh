@@ -9,7 +9,7 @@ export MT_ENV_FCLNAME=$1
 # NB: I am writing this for Ar25 which does overlays.
 # For overlays, delegate PARENT_FILE_SAM finding to the `stashDataFile.sh' script
 echo "sh ${CONDOR_DIR_INPUT}/icaruspoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json"
-sh ${CONDOR_DIR_INPUT}/sbndpoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json
+sh ${CONDOR_DIR_INPUT}/icaruspoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json
 echo "Start exporting now..."
 export MT_CONFIGURATION=$(cat extra_metadata.json | echo $(awk -F "\"configuration.name\":" '{print $2}') | echo $(awk -F "\"," '{print $1}') | echo $(awk -F "\"" '{print $2}'))
 export MT_BEAMTYPE=$(cat extra_metadata.json | echo $(awk -F "\"sbn_dm.beam_type\":" '{print $2}') | echo $(awk -F "\"," '{print $1}') | echo $(awk -F "\"" '{print $2}'))

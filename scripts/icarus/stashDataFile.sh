@@ -21,10 +21,11 @@ export SAM_CONSUMER_ID=${SAM_CONSUMER_ID#*=} && echo "SAM_CONSUMER_ID is ${SAM_C
 #    export my_furi=$(ifdh getNextFile ${my_cpurl} ${SAM_CONSUMER_ID}) && echo "ip = ${ip} : my_furi is ${my_furi}"
 #done
 
-export my_furi=$(ifdh getNextFile ${my_cpurl} ${SAM_CONSUMER_ID}) && echo "mu_furi is ${my_furi}"
-ifdh updateFileStatus ${my_cpurl} ${SAM_CONSUMER_ID} consumed
+export my_furi=$(ifdh getNextFile ${my_cpurl} ${SAM_CONSUMER_ID}) && echo "my_furi is ${my_furi}"
+#ifdh updateFileStatus ${my_cpurl} ${SAM_CONSUMER_ID} consumed
 
 export PARENT_FILE_SAM=$(basename ${my_furi}) && echo "Here is the PARENT_FILE_SAM..." && echo " ${PARENT_FILE_SAM}"
 
 echo "${my_furi}" > real_data_input.txt
 cat real_data_input.txt
+

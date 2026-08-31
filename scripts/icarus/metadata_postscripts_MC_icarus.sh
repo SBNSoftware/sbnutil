@@ -38,7 +38,7 @@ else
     echo -e "flatFile: ${flatFile}"
 fi
 
->&2 echo -e "\n\nFrom parent file ${parentFile} I get metadata..."
+echo -e "\n\nFrom parent file ${parentFile} I get metadata..."
 samweb -e ${SAM_EXPERIMENT} get-metadata --json ${parentFile} > old_par_md.json
 par_name=${parentFile/.root/}
 
@@ -54,10 +54,15 @@ par_name=${parentFile/.root/}
 #first_event=$(echo ${first_token} | awk -F " " '{print $5}')
 #last_event=$(echo ${last_token} | awk -F " " '{print $5}')
 
-# Get event_count from specific JSON file
-#json_file="hist_gen_g4_detsim_stage0_stage1_caf.root.json"
-#event_count=$(grep '"event_count":' "$json_file" | head -1 | sed 's/.*"event_count": *//' | sed 's/[^0-9].*//')
-event_count=${MT_EVENTCOUNT}
+# Get run and event_count directly from the parent file
+run_no=$(cat old_par_md.json | jq -r ."runs[0][0]")
+
+event_count=0
+if [[ ! -z ${stage0File} ]] ; then
+    event_count=$(cat old_par_md.json | jq -r .'"sbn_dm.event_count"')
+else
+    event_count=$(cat old_par_md.json | jq -r .'"event_count"')
+fi
 
 #########################
 
@@ -259,13 +264,13 @@ for mdFile in "${MDFILES[@]}" ; do
     echo -e " \"runs\": [" >> ${mdFile}
     echo -e "   [" >> ${mdFile}
     echo -e "     ${run_no}," >> ${mdFile}
-    echo -e "     ${subrun_no}," >> ${mdFile}
+    #echo -e "     ${subrun_no}," >> ${mdFile}
     echo -e "     \"physics\"" >> ${mdFile}
     echo -e "   ]" >> ${mdFile}
     echo -e " ]," >> ${mdFile}
     echo -e " \"event_count\": ${event_count}," >> ${mdFile}
-    echo -e " \"first_event\": ${first_event}," >> ${mdFile}
-    echo -e " \"last_event\": ${last_event}," >> ${mdFile}
+    #echo -e " \"first_event\": ${first_event}," >> ${mdFile}
+    #echo -e " \"last_event\": ${last_event}," >> ${mdFile}
     echo -e " \"parents\": [" >> ${mdFile}
     echo -e "\t{ \"file_name\": \"${parentFile}\" }" >> ${mdFile}
     echo -e "  ]" >> ${mdFile}
@@ -341,7 +346,7 @@ if [[ ! -z ${stage0File} ]] ; then
 	ifdh cp -D ${newStage0File} ${FULL_STAGE0_OUTDIR} && echo "COPYING STAGE0 FILE $(basename ${newStage0File}) TO ${FULL_STAGE0_OUTDIR}..."
 	samweb -e ${SAM_EXPERIMENT} declare-file ${STAGE0_MD}
 	samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newStage0File}) dcache:${FULL_STAGE0_OUTDIR}
-	echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newStage0File}) dcache:${FULL_STAGE0_OUTDIR}"
+	echo -e "samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newStage0File}) dcache:${FULL_STAGE0_OUTDIR}"
 
 	samweb -e ${SAM_EXPERIMENT} create-definition ${STAGE0_DTAG} "Dataset.Tag ${STAGE0_DTAG}"
     fi
@@ -352,7 +357,7 @@ else
 	ifdh cp -D ${newLarcvFile} ${FULL_LARCV_OUTDIR} && echo "COPYING LARCV FILE $(basename ${newLarcvFile}) TO ${FULL_LARCV_OUTDIR}..."
 	samweb -e ${SAM_EXPERIMENT} declare-file ${LARCV_MD}
 	samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newLarcvFile}) dcache:${FULL_LARCV_OUTDIR}
-	echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newLarcvFile}) dcache:${FULL_LARCV_OUTDIR}"
+	echo -e "samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newLarcvFile}) dcache:${FULL_LARCV_OUTDIR}"
 
 	samweb -e ${SAM_EXPERIMENT} create-definition ${LARCV_DTAG} "Dataset.Tag ${LARCV_DTAG}"
     fi
@@ -362,7 +367,7 @@ else
 	ifdh cp -D ${newHistFile} ${FULL_HIST_OUTDIR} && echo "COPYING HIST FILE $(basename ${newHistFile}) TO ${FULL_HIST_OUTDIR}..."
 	samweb -e ${SAM_EXPERIMENT} declare-file ${HIST_MD}
 	samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newHistFile}) dcache:${FULL_HIST_OUTDIR}
-	echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newHistFile}) dcache:${FULL_HIST_OUTDIR}"
+	echo -e "samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newHistFile}) dcache:${FULL_HIST_OUTDIR}"
 	
 	samweb -e ${SAM_EXPERIMENT} create-definition ${HIST_DTAG} "Dataset.Tag ${HIST_DTAG}"
     fi
@@ -372,7 +377,7 @@ else
 	ifdh cp -D ${newCafFile} ${FULL_CAF_OUTDIR} && echo "COPYING CAF FILE $(basename ${newCafFile}) TO ${FULL_CAF_OUTDIR}..."
 	samweb -e ${SAM_EXPERIMENT} declare-file ${CAF_MD}
 	samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newCafFile}) dcache:${FULL_CAF_OUTDIR}
-	echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newCafFile}) dcache:${FULL_CAF_OUTDIR}"
+	echo -e "samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newCafFile}) dcache:${FULL_CAF_OUTDIR}"
 	
 	samweb -e ${SAM_EXPERIMENT} create-definition ${CAF_DTAG} "Dataset.Tag ${CAF_DTAG}"
     fi
@@ -382,7 +387,7 @@ else
 	ifdh cp -D ${newFlatFile} ${FULL_FLAT_OUTDIR} && echo "COPYING FLATCAF FILE $(basename ${newFlatFile}) TO ${FULL_FLAT_OUTDIR}..."
 	samweb -e ${SAM_EXPERIMENT} declare-file ${FLAT_MD}
 	samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newFlatFile}) dcache:${FULL_FLAT_OUTDIR}
-	echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newFlatFile}) dcache:${FULL_FLAT_OUTDIR}"
+	echo -e "samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newFlatFile}) dcache:${FULL_FLAT_OUTDIR}"
 
 	samweb -e ${SAM_EXPERIMENT} create-definition ${FLAT_DTAG} "Dataset.Tag ${FLAT_DTAG}"
     fi
