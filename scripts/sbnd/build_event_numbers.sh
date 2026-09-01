@@ -5,7 +5,7 @@ echo -e "Inside build_event_numbers.sh "
 DECODE_FILE=$(find ./ -iname 'decoded-raw_filtered_*.root' | head -n 1)
 RECO1_FILE=$(find ./ -iname '*.root' | grep 'reco1' | grep -v 'reco2' | grep -v 'hist')
 RECO2_FILE=$(find ./ -iname '*.root' | grep 'reco2' | grep -v 'caf' | grep -v 'hist')
-#CAF_FILE=$(find ./ -iname '*.caf.root' | grep -v 'flat' | grep -v 'hist')
+CAF_FILE=$(find ./ -iname '*.caf.root' | grep -v 'flat' | grep -v 'hist')
 
 ACTIVE_FILE=
 case $1 in
@@ -24,15 +24,11 @@ case $1 in
     "reco2_caf")
 	ACTIVE_FILE=$(find /srv/jsb_tmp/ -iname '*LOG*')
 	;;
-	  "decode_reco1_reco2")
-	ACTIVE_FILE=$(find /srv/jsb_tmp/ -iname '*LOG*')
-	;;
     "decode_reco1_reco2_caf")
 	ACTIVE_FILE=$(find /srv/jsb_tmp/ -iname '*LOG*')
 	;;
     *)
 	>&2 echo "ERROR on build_event_numbers.sh: unknown stage"
-	echo -e "ERROR on build_event_numbers.sh: unknown stage"
 	exit 1
 esac
 
@@ -55,5 +51,3 @@ done
 echo "Exporting MT_EVENTSTRING=${EVENTSTRING}"
 
 export MT_EVENTSTRING=${EVENTSTRING}
-
-echo -e "build_event_numbers.sh Done"

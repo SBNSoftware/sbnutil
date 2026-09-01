@@ -8,10 +8,6 @@ if [[ $# -gt 2 ]] ; then
     cat ${CONDOR_DIR_INPUT}/$4
 fi
 
-source /cvmfs/larsoft.opensciencegrid.org/products/setup
-setup ifdhc v2_8_0 -q e26:p3915:prof
-echo "ifdh in use: $(command -v ifdh) (IFDHC_VERSION=${IFDHC_VERSION:-unset})"
-
 export MT_ENV_FCLNAME=$1
 echo "export my_cpurl=$(ifdh findProject ${SAM_PROJECT} ${SAM_STATION} ${EXPERIMENT}) && echo \"my_cpurl is ${my_cpurl}\""
 export my_cpurl=$(ifdh findProject ${SAM_PROJECT} ${SAM_STATION} ${EXPERIMENT}) && echo "my_cpurl is ${my_cpurl}"
