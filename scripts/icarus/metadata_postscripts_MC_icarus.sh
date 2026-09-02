@@ -8,7 +8,7 @@
 >&2 echo -e "\n\nSTARTING $0...\n\n"
 
 export PARENT_FILE_SAM=$(cat real_data_input.txt)
-parentFile=$(basename ${PARENT_FILE_SAM}) # This is either a raw file or a stage0 file
+parentFile=$(basename ${PARENT_FILE_SAM}) # This is a raw file. For a stage0 file see later
 stage0File=''  # Artroot stage0 files
 larcvFile=''   # LarCV files
 histFile=''    # Calib ntuples
@@ -25,6 +25,15 @@ larcvFile=$(find ./ -iname 'larcv*.root' | grep -v 'stage1')
 histFile=$(find ./ -iname 'hist*.root' | grep 'stage1' | head -n 1)
 cafFile=$(find ./ -iname '*stage1.caf.root')
 flatFile=$(find ./ -iname '*stage1.flat.caf.root')
+
+# This is INCREDIBLY inelegant. It also works.
+if [[ -z ${stage0File} ]] ; then
+    echo "I am now running cat..."
+    cat jsb_tmp/JOBSUB_LOG_FILE | grep 'Closed input file' | grep 'fndcadoor.fnal.gov'
+    parentFile=$(cat jsb_tmp/JOBSUB_LOG_FILE | grep 'Closed input file' | grep 'fndcadoor.fnal.gov' | awk -F " " '{print $NF}' | tr -d "\"")
+    parentFile=$(basename ${parentFile})
+    echo "I have now got parentFile=${parentFile}"
+fi
 
 echo -e "Here is the contents of the dir BEFORE renaming..."
 ls -ltrh
@@ -147,10 +156,10 @@ else
     FLAT_MD=md_flat.json
     touch ${LARCV_MD}; touch ${HIST_MD}; touch ${CAF_MD}; touch ${FLAT_MD}
 
-    MDFILES+=$(${LARCV_MD})
-    MDFILES+=$(${HIST_MD})
-    MDFILES+=$(${CAF_MD})
-    MDFILES+=$(${FLAT_MD})
+    MDFILES+=(${LARCV_MD})
+    MDFILES+=(${HIST_MD})
+    MDFILES+=(${CAF_MD})
+    MDFILES+=(${FLAT_MD})
 fi
 
 for mdFile in "${MDFILES[@]}" ; do
@@ -216,7 +225,7 @@ done
 # Dataset tags
 export DTAG_PREAMBLE=${MT_PRODUCTIONTYPE}_${MT_PRODUCTIONLABEL}_${MT_FCLNAME}_${MT_SAMPLE}_${ICARUSCODE_VERSION}
 export STAGE0_DTAG=${DTAG_PREAMBLE}_stage0_icarus
-export LARCV_DTAG=${DTAG_PREAMBLE}_larcvstage0_icarus
+export LARCV_DTAG=${DTAG_PREAMBLE}_larcvstage1_icarus
 export HIST_DTAG=${DTAG_PREAMBLE}_histstage1_icarus
 export CAF_DTAG=${DTAG_PREAMBLE}_caf_icarus
 export FLAT_DTAG=${DTAG_PREAMBLE}_flatcaf_icarus
