@@ -9,7 +9,7 @@
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
 find_package(cetmodules REQUIRED)
-project(sbnutil VERSION 01.00.00)
+project(sbnutil VERSION 01.01.00)
 
 # Sbnutil has not architecture dependence
 include(CetCMakeEnv)
