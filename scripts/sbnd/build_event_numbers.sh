@@ -8,27 +8,34 @@ CAF_FILE=$(find ./ -iname '*.caf.root' | grep -v 'flat' | grep -v 'hist')
 ACTIVE_FILE=
 case $1 in
     "decode")
-	ACTIVE_FILE=${DECODE_FILE}
-	;;
+        ACTIVE_FILE=${DECODE_FILE}
+        ;;
     "reco1")
-	ACTIVE_FILE=${RECO1_FILE}
-	;;
+        ACTIVE_FILE=${RECO1_FILE}
+        ;;
     "reco2")
-	ACTIVE_FILE=${RECO2_FILE}
-	;;
+        ACTIVE_FILE=${RECO2_FILE}
+        ;;
     "caf")
-	ACTIVE_FILE=${CAF_FILE}
-	;;
+        ACTIVE_FILE=${CAF_FILE}
+        ;;
     "reco2_caf")
-	ACTIVE_FILE=$(find /srv/jsb_tmp/ -iname '*LOG*')
-	;;
+        ACTIVE_FILE=$(find ./ -maxdepth 1 -iname 'messages.log' | head -n 1)
+        ;;
+    "decode_reco1")
+        ACTIVE_FILE=$(find ./ -maxdepth 1 -iname 'messages.log' | head -n 1)
+        ;;
     "decode_reco1_reco2_caf")
-	ACTIVE_FILE=$(find /srv/jsb_tmp/ -iname '*LOG*')
-	;;
+        ACTIVE_FILE=$(find /srv/jsb_tmp/ -iname '*LOG*')
+        ;;
     *)
-	>&2 echo "ERROR on build_event_numbers.sh: unknown stage"
-	exit 1
+        >&2 echo "ERROR on build_event_numbers.sh: unknown stage"
+        exit 1
+        ;;
 esac
+
+[ -z "${ACTIVE_FILE}" ] && ACTIVE_FILE=$(find /srv/jsb_tmp/ -iname '*LOG*')
+
 
 echo -e "Building event numbers for input file "$ACTIVE_FILE " ..."
 >&2 echo -e "Building event numbers for input file "$ACTIVE_FILE " ..."
