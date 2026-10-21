@@ -226,7 +226,6 @@ for mdFile in ${RECO1_MD} ${LARCV_MD} ${HIST_MD} ${CAF_MD} ${FLAT_MD} ; do
     echo -e " \"sbnd_project.software\": \"${MT_PROJECTSOFTWARE}\"," >> ${mdFile}
     echo -e " \"sbnd_project.stage\": \"${MT_PROJECTSTAGE}\"," >> ${mdFile}
     echo -e " \"sbnd_project.version\": \"${SBNDCODE_VERSION}\"," >> ${mdFile}
-    echo -e " \"event_count\": ${MT_EVENTCOUNT}," >> ${mdFile}
     echo -e " \"runs\": [" >> ${mdFile}
     echo -e " ${runString}" >> ${mdFile}
     echo -e " ]," >> ${mdFile}
@@ -293,8 +292,8 @@ if samweb -e ${SAM_EXPERIMENT} validate-metadata ${RECO1_MD} ; then
     ifdh cp -D ${newReco1File} ${FULL_RECO1_OUTDIR} && echo "COPYING RECO1 FILE $(basename ${newReco1File}) TO ${FULL_RECO1_OUTDIR}..."
     echo "DECLARING RECO1 ARTROOT FILE ${newReco1File}"
     samweb -e ${SAM_EXPERIMENT} declare-file ${RECO1_MD}
-    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newReco1File}) dcache:${FULL_RECO1_OUTDIR}
-    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newReco1File}) dcache:${FULL_RECO1_OUTDIR}"
+    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newReco1File}) ${FULL_RECO1_OUTDIR}
+    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newReco1File}) ${FULL_RECO1_OUTDIR}"
 
     echo -e "Creating definition ${RECO1_DTAG}..."
     samweb -e ${SAM_EXPERIMENT} create-definition ${RECO1_DTAG} "Dataset.Tag ${RECO1_DTAG}"
@@ -305,8 +304,8 @@ if samweb -e ${SAM_EXPERIMENT} validate-metadata ${LARCV_MD} ; then
     ifdh cp -D ${newLarcvFile} ${FULL_LARCV_OUTDIR} && echo "COPYING LARCV FILE $(basename ${newLarcvFile}) TO ${FULL_LARCV_OUTDIR}..."
     echo "DECLARING LARCV FILE ${newLarcvFile}"
     samweb -e ${SAM_EXPERIMENT} declare-file ${LARCV_MD}
-    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newLarcvFile}) dcache:${FULL_LARCV_OUTDIR}
-    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newLarcvFile}) dcache:${FULL_LARCV_OUTDIR}"
+    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newLarcvFile}) ${FULL_LARCV_OUTDIR}
+    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newLarcvFile}) ${FULL_LARCV_OUTDIR}"
 
     echo -e "Creating definition ${LARCV_DTAG}..."
     samweb -e ${SAM_EXPERIMENT} create-definition ${LARCV_DTAG} "Dataset.Tag ${LARCV_DTAG}"
@@ -317,8 +316,8 @@ if samweb -e ${SAM_EXPERIMENT} validate-metadata ${HIST_MD} ; then
     ifdh cp -D ${newHistFile} ${FULL_HIST_OUTDIR} && echo "COPYING HIST FILE $(basename ${newHistFile}) TO ${FULL_HIST_OUTDIR}..."
     echo "DECLARING HISTOGRAM FILE ${newHistFile}"
     samweb -e ${SAM_EXPERIMENT} declare-file ${HIST_MD}
-    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newHistFile}) dcache:${FULL_HIST_OUTDIR}
-    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newHistFile}) dcache:${FULL_HIST_OUTDIR}"
+    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newHistFile}) ${FULL_HIST_OUTDIR}
+    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newHistFile}) ${FULL_HIST_OUTDIR}"
 
     echo -e "Creating definition ${HIST_DTAG}..."
     samweb -e ${SAM_EXPERIMENT} create-definition ${HIST_DTAG} "Dataset.Tag ${HIST_DTAG}"
@@ -329,8 +328,8 @@ if samweb -e ${SAM_EXPERIMENT} validate-metadata ${CAF_MD} ; then
     ifdh cp -D ${newCafFile} ${FULL_CAF_OUTDIR} && echo "COPYING CAF FILE $(basename ${newCafFile}) TO ${FULL_CAF_OUTDIR}..."
     echo "DECLARING CAF FILE ${newCafFile}"
     samweb -e ${SAM_EXPERIMENT} declare-file ${CAF_MD}
-    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newCafFile}) dcache:${FULL_CAF_OUTDIR}
-    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newCafFile}) dcache:${FULL_CAF_OUTDIR}"
+    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newCafFile}) ${FULL_CAF_OUTDIR}
+    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newCafFile}) ${FULL_CAF_OUTDIR}"
 
     echo -e "Creating definition ${CAF_DTAG}..."
     samweb -e ${SAM_EXPERIMENT} create-definition ${CAF_DTAG} "Dataset.Tag ${CAF_DTAG}"
@@ -341,8 +340,8 @@ if samweb -e ${SAM_EXPERIMENT} validate-metadata ${FLAT_MD} ; then
     ifdh cp -D ${newFlatFile} ${FULL_FLAT_OUTDIR} && echo "COPYING FLATCAF FILE $(basename ${newFlatFile}) TO ${FULL_FLAT_OUTDIR}..."
     echo "DECLARING FLAT FILE ${newFlatFile}"
     samweb -e ${SAM_EXPERIMENT} declare-file ${FLAT_MD}
-    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newFlatFile}) dcache:${FULL_FLAT_OUTDIR}
-    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newFlatFile}) dcache:${FULL_FLAT_OUTDIR}"
+    samweb -e ${SAM_EXPERIMENT} add-file-location $(basename ${newFlatFile}) ${FULL_FLAT_OUTDIR}
+    echo -e "samweb -e ${SAM_EXPERIMENT} add_file_location $(basename ${newFlatFile}) ${FULL_FLAT_OUTDIR}"
 
     echo -e "Creating definition ${FLAT_DTAG}..."
     samweb -e ${SAM_EXPERIMENT} create-definition ${FLAT_DTAG} "Dataset.Tag ${FLAT_DTAG}"
