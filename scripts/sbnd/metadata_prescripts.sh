@@ -19,13 +19,13 @@ if [[ $(echo $1 | grep -e "genie") == "" ]] ; then
     echo "sh ${CONDOR_DIR_INPUT}/sbndpoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json"
     sh ${CONDOR_DIR_INPUT}/sbndpoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json
     echo "Start exporting now..."
-    export MT_CONFIGURATION=$(cat extra_metadata.json | echo $(awk -F "\"configuration.name\":" '{print $2}') | echo $(awk -F "\"," '{print $1}') | echo $(awk -F "\"" '{print $2}'))
-    export MT_BEAMTYPE=$(cat extra_metadata.json | echo $(awk -F "\"sbn_dm.beam_type\":" '{print $2}') | echo $(awk -F "\"," '{print $1}') | echo $(awk -F "\"" '{print $2}'))
-    export MT_DETECTOR=$(cat extra_metadata.json | echo $(awk -F "\"sbn_dm.detector\":" '{print $2}') | echo $(awk -F "\"," '{print $1}') | echo $(awk -F "\"" '{print $2}'))
-    export MT_EVENTCOUNT=$(cat extra_metadata.json | echo $(awk -F "\"sbn_dm.event_count\":" '{print $2}') | echo $(awk -F "," '{print $1}'))
-    export MT_RANDOM=$(cat extra_metadata.json | echo $(awk -F "\"sbnd.random\":" '{print $2}') | echo $(awk -F "," '{print $1}'))
-    export MT_RANDOMRUN=$(cat extra_metadata.json | echo $(awk -F "\"sbnd.random_run\":" '{print $2}') | echo $(awk -F "," '{print $1}'))
-    export MT_DATASTREAM=$(cat extra_metadata.json | echo $(awk -F "\"data_stream\":" '{print $2}') | echo $(awk -F "," '{print $1}'))
+    export MT_CONFIGURATION=$(jq -r '."configuration.name" // empty' extra_metadata.json)
+    export MT_BEAMTYPE=$(jq -r '."sbn_dm.beam_type" // empty' extra_metadata.json)
+    export MT_DETECTOR=$(jq -r '."sbn_dm.detector" // empty' extra_metadata.json)
+    export MT_EVENTCOUNT=$(jq -r '."sbn_dm.event_count" // empty' extra_metadata.json)
+    export MT_RANDOM=$(jq -r '."sbnd.random" // empty' extra_metadata.json)
+    export MT_RANDOMRUN=$(jq -r '."sbnd.random_run" // empty' extra_metadata.json)
+    export MT_DATASTREAM=$(jq -r '.data_stream // empty' extra_metadata.json)
     # find the stream name from the PARENT_FILE_SAM
     filtered_stream_name=${PARENT_FILE_SAM#*_strm}
     filtered_stream_name=${filtered_stream_name%_*}
