@@ -16,8 +16,8 @@ export my_furi=$(ifdh getNextFile ${my_cpurl} ${SAM_CONSUMER_ID}) && echo "my_fu
 echo "export PARENT_FILE_SAM=$(basename ${my_furi}) && echo \"Here is the PARENT_FILE_SAM...\" && echo \" ${PARENT_FILE_SAM}\""
 export PARENT_FILE_SAM=$(basename ${my_furi}) && echo "Here is the PARENT_FILE_SAM..." && echo " ${PARENT_FILE_SAM}"
 if [[ $(echo $1 | grep -e "genie") == "" ]] ; then
-    echo "sh ${CONDOR_DIR_INPUT}/sbndpoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json"
-    sh ${CONDOR_DIR_INPUT}/sbndpoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json
+    echo "sh sbndpoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json"
+    sh sbndpoms_metadata_injector.sh --writeExtraMetadata ${PARENT_FILE_SAM} > extra_metadata.json
     echo "Start exporting now..."
     export MT_CONFIGURATION=$(jq -r '."configuration.name" // empty' extra_metadata.json)
     export MT_BEAMTYPE=$(jq -r '."sbn_dm.beam_type" // empty' extra_metadata.json)
