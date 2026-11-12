@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+echo -e "Inside build_event_numbers.sh "
+
 DECODE_FILE=$(find ./ -iname 'decoded-raw_filtered_*.root' | head -n 1)
 RECO1_FILE=$(find ./ -iname '*.root' | grep 'reco1' | grep -v 'reco2' | grep -v 'hist')
 RECO2_FILE=$(find ./ -iname '*.root' | grep 'reco2' | grep -v 'caf' | grep -v 'hist')

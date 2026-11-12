@@ -163,7 +163,7 @@ def check_metadata(samweb1, samweb2, experiment, f, invalid_file):
 
     # Remove keys that we never want to migrate in the target database.
 
-    for k in ('file_id', 'process_id', 'create_date', 'update_date', 'update_user', 'sbn.migrate'):
+    for k in ('file_id', 'process_id', 'create_date', 'update_date', 'update_user', 'sbn.migrate', 'sbnd.genie_tune', 'sbnd.genie_tag'):
         if k in md1:
             del md1[k]
 
